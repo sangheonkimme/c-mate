@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+/* ========================================
+   C-Mate Design System — Custom Tokens
+   ======================================== */
+
+/* Font */
+@theme {
+  --font-sans: "Noto Sans KR", sans-serif;
+
+  /* Colors - Primary */
+  --color-primary: #FF5F79;
+
+  /* Colors - Neutral */
+  --color-neutral-dark: #353644;
+  --color-neutral: #626474;
+  --color-neutral-light: #B7B9C9;
+  --color-neutral-lighter: #F3F4FA;
+}

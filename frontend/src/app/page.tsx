@@ -1,7 +1,16 @@
+"use client";
+
+import { MobileLayout } from "@/components";
+
 export default function Home() {
   return (
-    <main>
-      <div>Hello world!</div>
-    </main>
+    <MobileLayout
+      title="마이페이지"
+      showNav={true}
+      showTabBar={true}
+      onBack={() => {}} // 임시 핸들러
+    >
+      {/* 본문 컨텐츠 */}
+    </MobileLayout>
   );
 }

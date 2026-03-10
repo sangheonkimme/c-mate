@@ -19,7 +19,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="font-sans text-base antialiased">{children}</body>
+      <body className="bg-gray-2 font-sans text-base antialiased">
+        {children}
+      </body>
     </html>
   );
 }

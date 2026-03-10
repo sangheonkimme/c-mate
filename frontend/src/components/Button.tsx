@@ -58,15 +58,17 @@ export default function Button({
 }: ButtonProps) {
   const styles = variantStyles[variant];
   const sizeClass = variant === "textLink" ? "" : sizeStyles[size];
+  const hasIcon = Boolean(leftIcon || rightIcon);
 
   return (
     <button
       type="button"
       disabled={disabled}
       className={`
-        inline-flex items-center justify-center gap-1.5 font-bold
+        inline-flex items-center justify-center font-bold
         transition-all duration-150 cursor-pointer
         disabled:cursor-not-allowed
+        ${hasIcon ? "gap-2" : ""}
         ${styles.base} ${styles.hover} ${styles.disabled}
         ${sizeClass} ${className}
       `.trim()}

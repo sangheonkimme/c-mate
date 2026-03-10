@@ -12,9 +12,9 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
     const textareaId = id || label?.replace(/\s/g, "_");
 
     return (
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-2">
         {label && (
-          <label htmlFor={textareaId} className="text-b2 font-bold text-gray-black">
+          <label htmlFor={textareaId} className="text-b1 text-gray-2">
             {label}
           </label>
         )}
@@ -22,12 +22,12 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
           ref={ref}
           id={textareaId}
           className={`
-            min-h-[150px] w-full resize-none rounded-lg border border-gray-3
-            bg-white px-3 py-3 text-b1 text-gray-black
+            min-h-[150px] w-full resize-none rounded-[12px] border border-gray-4
+            bg-white px-5 py-3 text-b1 leading-6 text-gray-black
             placeholder:text-gray-3 outline-none transition-colors
             hover:border-gray-black
             focus:border-primary
-            disabled:bg-gray-6 disabled:text-gray-3
+            disabled:border-gray-4 disabled:bg-gray-5 disabled:text-gray-3
             ${error ? "border-red-500" : ""}
             ${className}
           `.trim()}

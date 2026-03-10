@@ -53,7 +53,7 @@ export default function MobileLayout({
 
       {/* 스크롤 가능한 본문 영역 */}
       <main
-        className={`flex-1 overflow-y-auto ${showNav ? "pt-[96px]" : ""} ${
+        className={`flex-1 overflow-y-auto ${showNav ? "pt-[92px]" : ""} ${
           showTabBar ? "pb-[83px]" : ""
         }`}
       >

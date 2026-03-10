@@ -1,6 +1,5 @@
 export { default as TopNavBar } from './TopNavBar';
 export { default as TabBar } from './TabBar';
-export { default as SectionTitle } from './SectionTitle';
 export { default as Button } from './Button';
 export { default as TextField } from './TextField';
 export { default as TextArea } from './TextArea';
@@ -10,3 +9,5 @@ export { default as Label } from './Label';
 export { default as Selectbox } from './Selectbox';
 export { default as MultiSelect } from './MultiSelect';
 export { default as MobileLayout } from './MobileLayout';
+export { InfoRow, TagPanel } from './edit';
+export { Section, SectionTitle } from './section';

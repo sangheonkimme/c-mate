@@ -14,7 +14,7 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     return (
       <div className="flex flex-col gap-1.5">
         {label && (
-          <label htmlFor={inputId} className="text-b2 font-bold text-neutral-dark">
+          <label htmlFor={inputId} className="text-b2 font-bold text-gray-black">
             {label}
           </label>
         )}
@@ -22,12 +22,12 @@ const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           ref={ref}
           id={inputId}
           className={`
-            h-11 w-full rounded-lg border border-neutral-light bg-white
-            px-3 text-b1 text-neutral-dark placeholder:text-neutral-light
+            h-11 w-full rounded-lg border border-gray-3 bg-white
+            px-3 text-b1 text-gray-black placeholder:text-gray-3
             outline-none transition-colors
-            hover:border-neutral-dark
+            hover:border-gray-black
             focus:border-primary
-            disabled:bg-neutral-lighter disabled:text-neutral-light
+            disabled:bg-gray-6 disabled:text-gray-3
             ${error ? "border-red-500" : ""}
             ${className}
           `.trim()}

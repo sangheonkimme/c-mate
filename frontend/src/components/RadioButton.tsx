@@ -21,11 +21,11 @@ const RadioButton = forwardRef<HTMLInputElement, RadioButtonProps>(
             {...props}
           />
           {/* Outer circle */}
-          <span className="absolute h-5 w-5 rounded-full border-2 border-neutral-light peer-checked:border-primary" />
+          <span className="absolute h-5 w-5 rounded-full border-2 border-gray-3 peer-checked:border-primary" />
           {/* Inner dot */}
           <span className="absolute h-2.5 w-2.5 scale-0 rounded-full bg-primary transition-transform peer-checked:scale-100" />
         </span>
-        {label && <span className="text-b1 text-neutral-dark">{label}</span>}
+        {label && <span className="text-b1 text-gray-black">{label}</span>}
       </label>
     );
   }

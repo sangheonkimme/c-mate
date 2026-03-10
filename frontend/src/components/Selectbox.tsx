@@ -46,14 +46,14 @@ export default function Selectbox({
           flex h-11 w-full items-center justify-between rounded-lg border px-3 text-b1
           transition-colors
           ${disabled
-            ? "cursor-not-allowed border-neutral-lighter bg-neutral-lighter text-neutral-light"
+            ? "cursor-not-allowed border-gray-6 bg-gray-6 text-gray-3"
             : selected
-              ? "border-neutral-dark bg-neutral-dark text-white"
-              : "border-neutral-light bg-white text-neutral-dark"
+              ? "border-gray-black bg-gray-black text-white"
+              : "border-gray-3 bg-white text-gray-black"
           }
         `.trim()}
       >
-        <span className={selected ? "" : "text-neutral-light"}>
+        <span className={selected ? "" : "text-gray-3"}>
           {selected ? selected.label : placeholder}
         </span>
         <svg
@@ -69,7 +69,7 @@ export default function Selectbox({
 
       {/* Dropdown */}
       {open && !disabled && (
-        <ul className="absolute z-50 mt-1 w-full rounded-lg border border-neutral-lighter bg-white py-1 shadow-lg">
+        <ul className="absolute z-50 mt-1 w-full rounded-lg border border-gray-6 bg-white py-1 shadow-lg">
           {options.map((option) => {
             const isSelected = option.value === value;
             return (
@@ -83,8 +83,8 @@ export default function Selectbox({
                   className={`
                     flex w-full items-center justify-between px-3 py-2.5 text-b1 transition-colors
                     ${isSelected
-                      ? "bg-neutral-dark text-white"
-                      : "text-neutral-dark hover:bg-neutral-lighter"
+                      ? "bg-gray-black text-white"
+                      : "text-gray-black hover:bg-gray-6"
                     }
                   `.trim()}
                 >

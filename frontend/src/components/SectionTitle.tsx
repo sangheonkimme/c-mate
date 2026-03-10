@@ -12,7 +12,7 @@ export default function SectionTitle({ title, sub, onMore }: SectionTitleProps) 
   return (
     <div className="flex items-center justify-between px-4 py-3">
       <div className="flex items-baseline gap-2">
-        <h2 className="text-b1-bold font-bold text-neutral-dark">{title}</h2>
+        <h2 className="text-b1-bold font-bold text-gray-black">{title}</h2>
         {sub && typeof sub === "string" ? (
           <span className="text-b3 text-primary">{sub}</span>
         ) : (
@@ -24,7 +24,7 @@ export default function SectionTitle({ title, sub, onMore }: SectionTitleProps) 
         <button
           type="button"
           onClick={onMore}
-          className="flex h-6 w-6 items-center justify-center text-neutral-light"
+          className="flex h-6 w-6 items-center justify-center text-gray-3"
           aria-label="더보기"
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

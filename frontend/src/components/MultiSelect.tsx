@@ -21,7 +21,7 @@ export default function MultiSelect({
   };
 
   return (
-    <ul className={`rounded-lg border border-neutral-light bg-white ${className}`}>
+    <ul className={`rounded-lg border border-gray-3 bg-white ${className}`}>
       {options.map((option) => {
         const isSelected = values.includes(option.value);
         return (
@@ -31,7 +31,7 @@ export default function MultiSelect({
               onClick={() => toggle(option.value)}
               className={`
                 flex w-full items-center px-3 py-2.5 text-b1 transition-colors
-                ${isSelected ? "text-neutral-dark font-bold" : "text-neutral-light"}
+                ${isSelected ? "text-gray-black font-bold" : "text-gray-3"}
               `.trim()}
             >
               {option.label}

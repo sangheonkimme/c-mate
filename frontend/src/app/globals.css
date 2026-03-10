@@ -11,9 +11,24 @@
   /* Colors - Primary */
   --color-primary: #FF5F79;
 
-  /* Colors - Neutral */
-  --color-neutral-dark: #353644;
-  --color-neutral: #626474;
-  --color-neutral-light: #B7B9C9;
-  --color-neutral-lighter: #F3F4FA;
+  /* Colors - Gray Scale (Figma Naming) */
+  --color-gray-black: #353644;
+  --color-gray-1: #626474;
+  --color-gray-2: #9395A6;
+  --color-gray-3: #B7B9C9;
+  --color-gray-4: #E4E6F0;
+  --color-gray-5: #F3F4FA;
+  --color-gray-6: #F8F8FC;
+}
+
+@layer utilities {
+  /* Typography Variables: Dp, H1, H2, B1, B2, b1, b2, b3 */
+  .text-Dp { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.4px; }
+  .text-H1 { font-size: 20px; line-height: 28px; font-weight: 700; letter-spacing: -0.4px; }
+  .text-H2 { font-size: 18px; line-height: 24px; font-weight: 700; letter-spacing: -0.3px; }
+  .text-B1 { font-size: 16px; line-height: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  .text-B2 { font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: -0.2px; }
+  .text-b1 { font-size: 16px; line-height: 22px; font-weight: 400; letter-spacing: -0.3px; }
+  .text-b2 { font-size: 14px; line-height: 18px; font-weight: 400; letter-spacing: -0.2px; }
+  .text-b3 { font-size: 12px; line-height: 18px; font-weight: 400; letter-spacing: -0.2px; }
 }

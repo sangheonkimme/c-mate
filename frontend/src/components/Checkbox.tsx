@@ -21,7 +21,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             {...props}
           />
           {/* Off state */}
-          <span className="absolute h-5 w-5 rounded border-2 border-neutral-light peer-checked:border-primary peer-checked:bg-primary" />
+          <span className="absolute h-5 w-5 rounded border-2 border-gray-3 peer-checked:border-primary peer-checked:bg-primary" />
           {/* Check icon */}
           <svg
             className="absolute h-3 w-3 scale-0 text-white transition-transform peer-checked:scale-100"
@@ -33,7 +33,7 @@ const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
             <path d="M2 6l3 3 5-5" />
           </svg>
         </span>
-        {label && <span className="text-b1 text-neutral-dark">{label}</span>}
+        {label && <span className="text-b1 text-gray-black">{label}</span>}
       </label>
     );
   }

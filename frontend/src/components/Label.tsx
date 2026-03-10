@@ -8,7 +8,7 @@ interface LabelProps {
 
 const variantStyles: Record<LabelVariant, string> = {
   primary: "bg-primary text-white",
-  default: "bg-neutral-lighter text-neutral",
+  default: "bg-gray-6 text-gray-1",
   outline: "bg-transparent text-primary border border-primary/50",
 };
 

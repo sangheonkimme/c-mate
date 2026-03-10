@@ -13,9 +13,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const sizeStyles: Record<ButtonSize, string> = {
-  xl: "h-16 px-7 text-b1-bold",
-  l: "h-14 px-6 text-b1-bold",
-  m: "h-12 px-5 text-b2",
+  xl: "h-16 px-7 text-B1",
+  l: "h-14 px-6 text-B1",
+  m: "h-12 px-5 text-B1",
   s: "h-8 px-3 text-b3",
 };
 
@@ -25,24 +25,24 @@ const variantStyles: Record<ButtonVariant, {
   disabled: string;
 }> = {
   primary: {
-    base: "bg-primary text-white rounded-lg",
+    base: "bg-primary text-white rounded-[12px]",
     hover: "hover:brightness-80",
     disabled: "disabled:bg-primary/12 disabled:text-white",
   },
   secondary: {
-    base: "bg-transparent text-primary border border-primary/50 rounded-lg",
+    base: "bg-white text-primary border border-[#FF5F7980] rounded-[8px]",
     hover: "hover:bg-primary/10 hover:border-primary",
     disabled: "disabled:text-primary/12 disabled:border-primary/30",
   },
   ghost: {
-    base: "bg-transparent text-neutral border-none rounded-lg",
-    hover: "hover:bg-neutral-light hover:text-neutral-dark",
-    disabled: "disabled:text-neutral-light disabled:bg-neutral-lighter",
+    base: "bg-transparent text-gray-1 border-none rounded-[8px]",
+    hover: "hover:bg-gray-3 hover:text-gray-black",
+    disabled: "disabled:text-gray-3 disabled:bg-gray-6",
   },
   textLink: {
-    base: "bg-transparent text-neutral border-none p-0",
-    hover: "hover:text-neutral-dark",
-    disabled: "disabled:text-neutral-light",
+    base: "bg-transparent text-gray-1 border-none p-0",
+    hover: "hover:text-gray-black",
+    disabled: "disabled:text-gray-3",
   },
 };
 

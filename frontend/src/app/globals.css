@@ -10,6 +10,9 @@
 
   /* Colors - Primary */
   --color-primary: #FF5F79;
+  --color-sub-green: #48D487;
+  --color-sub-red: #FE7575;
+  --color-sub-orange: #FF9255;
 
   /* Colors - Gray Scale (Figma Naming) */
   --color-gray-black: #353644;

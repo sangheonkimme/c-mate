@@ -20,7 +20,7 @@ export default function TopNavBar({ title, onBack, rightAction }: TopNavBarProps
             <button
               type="button"
               onClick={onBack}
-              className="absolute left-4 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center text-gray-black"
+              className="absolute left-4 top-1/2 flex h-6 w-6 -translate-y-1/2 cursor-pointer items-center justify-center text-gray-black"
               aria-label="뒤로가기"
             >
               <IcoLeft className="h-6 w-6" />

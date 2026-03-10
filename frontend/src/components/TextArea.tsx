@@ -25,9 +25,9 @@ const TextArea = forwardRef<HTMLTextAreaElement, TextAreaProps>(
             min-h-[150px] w-full resize-none rounded-[12px] border border-gray-4
             bg-white px-5 py-3 text-b1 leading-6 text-gray-black
             placeholder:text-gray-3 outline-none transition-colors
-            hover:border-gray-black
-            focus:border-primary
-            disabled:border-gray-4 disabled:bg-gray-5 disabled:text-gray-3
+            hover:border-gray-2
+            focus:border-gray-2
+            disabled:border-gray-4 disabled:bg-gray-5 disabled:text-gray-3 disabled:hover:border-gray-4
             ${error ? "border-red-500" : ""}
             ${className}
           `.trim()}

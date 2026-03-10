@@ -11,6 +11,8 @@ import profileSub02Image from "@/assets/imgs/profile-sub-02.jpg";
 import IcoImgEdit from "@/assets/icons/ico-img-edit.svg";
 import IcoPlus from "@/assets/icons/ico-plus.svg";
 import IcoVolume from "@/assets/icons/ico-volume.svg";
+import { getBasicInfoItems } from "@/app/profile/edit/constants";
+import { useProfileEditStore } from "@/stores/profileEditStore";
 import {
   Button,
   InfoRow,
@@ -21,31 +23,6 @@ import {
   TagPanel,
   TextArea,
 } from "@/components";
-
-type BasicInfoItem = {
-  label: string;
-  value: string;
-  editable?: boolean;
-  muted?: boolean;
-};
-
-const BASIC_INFO: BasicInfoItem[] = [
-  { label: "이름", value: "임승리" },
-  { label: "성별", value: "여성", editable: false, muted: true },
-  { label: "나이", value: "89년생", editable: false, muted: true },
-  { label: "결혼경험", value: "초혼" },
-  { label: "신장", value: "170cm" },
-  { label: "나의 체형", value: "조금 통통" },
-  { label: "거주 지역", value: "서울" },
-  { label: "최종학력", value: "대졸" },
-  { label: "학교/전공", value: "총신대학교 / 신학과" },
-  { label: "직장명/직무", value: "크리스천 메이트 / 커플 매니저" },
-  { label: "연봉", value: "3000~4000만원" },
-  { label: "출석 교회명", value: "창신교회" },
-  { label: "모태신앙", value: "그렇다" },
-  { label: "음주 여부", value: "아예 하지 않습니다" },
-  { label: "흡연 여부", value: "비흡연" },
-];
 
 const CHARM_TAGS = [
   "선함",
@@ -124,6 +101,14 @@ function PhotoCard({
 
 export default function ProfileEditPage() {
   const router = useRouter();
+  const profileName = useProfileEditStore((state) => state.profileName);
+  const marriageStatus = useProfileEditStore((state) => state.marriageStatus);
+  const height = useProfileEditStore((state) => state.height);
+  const basicInfoItems = getBasicInfoItems({
+    profileName,
+    marriageStatus,
+    height,
+  });
 
   return (
     <MobileLayout
@@ -193,8 +178,12 @@ export default function ProfileEditPage() {
         <Section>
           <SectionTitle title="기본정보" />
           <div className="mt-4">
-            {BASIC_INFO.map((item) => (
-              <InfoRow key={item.label} {...item} />
+            {basicInfoItems.map((item) => (
+              <InfoRow
+                key={item.label}
+                {...item}
+                onClick={item.href ? () => router.push(item.href) : undefined}
+              />
             ))}
           </div>
 

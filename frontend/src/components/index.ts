@@ -9,5 +9,5 @@ export { default as Label } from './Label';
 export { default as Selectbox } from './Selectbox';
 export { default as MultiSelect } from './MultiSelect';
 export { default as MobileLayout } from './MobileLayout';
-export { InfoRow, TagPanel } from './edit';
-export { Section, SectionTitle } from './section';
+export { BasicInfoEditLayout, InfoRow, TagPanel } from './edit';
+export { Section, SectionTitle } from './page-section';

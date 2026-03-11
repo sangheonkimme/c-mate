@@ -4,14 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import IcoCancelCircle from "@/assets/icons/ico-cancel-circle.svg";
+import { BasicInfoEditLayout } from "@/components/profile-edit";
 import { Button, TextField } from "@/components";
-import { BasicInfoEditLayout } from "@/app/profile/edit/_components";
 import { useProfileEditStore } from "@/stores/profileEditStore";
 
 const NameEditPage = () => {
   const router = useRouter();
-  const savedName = useProfileEditStore((state) => state.profileName);
-  const setProfileName = useProfileEditStore((state) => state.setProfileName);
+  const savedName = useProfileEditStore((state) => state.profile.name);
+  const { setProfile } = useProfileEditStore((state) => state.actions);
   const [name, setName] = useState(savedName);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -38,7 +38,7 @@ const NameEditPage = () => {
       return;
     }
 
-    setProfileName(trimmedName);
+    setProfile({ name: trimmedName });
     router.push("/profile/edit");
   };
 

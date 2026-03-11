@@ -3,33 +3,26 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
+import { BasicInfoEditLayout } from "@/components/profile-edit";
 import { Button, RadioButton } from "@/components";
-import { BasicInfoEditLayout } from "@/app/profile/edit/_components";
-import { MARRIAGE_OPTIONS } from "@/app/profile/edit/constants";
+import { MARRIAGE_OPTIONS } from "@/features/profile-edit/constants";
 import { useProfileEditStore } from "@/stores/profileEditStore";
 
 const MarriageEditPage = () => {
   const router = useRouter();
-  const savedMarriageStatus = useProfileEditStore(
-    (state) => state.marriageStatus,
-  );
-  const setMarriageStatus = useProfileEditStore(
-    (state) => state.setMarriageStatus,
-  );
-  const [selectedMarriage, setSelectedMarriage] = useState(savedMarriageStatus);
-
-  useEffect(() => {
-    setSelectedMarriage(savedMarriageStatus);
-  }, [savedMarriageStatus]);
+  const marriage = useProfileEditStore((state) => state.profile.marriageStatus);
+  const { setProfile } = useProfileEditStore((state) => state.actions);
+  const [selectedMarriage, setSelectedMarriage] = useState(marriage);
 
   const handleComplete = () => {
-    if (!selectedMarriage) {
-      return;
-    }
-
-    setMarriageStatus(selectedMarriage);
+    if (!selectedMarriage) return;
+    setProfile({ marriageStatus: selectedMarriage });
     router.push("/profile/edit");
   };
+
+  useEffect(() => {
+    setSelectedMarriage(marriage);
+  }, [marriage]);
 
   return (
     <BasicInfoEditLayout

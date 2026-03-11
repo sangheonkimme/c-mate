@@ -114,6 +114,7 @@ export const getMyPage = async (req: Request, res: Response) => {
     const completionRate = Math.round((filledCount / allFields.length) * 100);
 
     return res.json({
+      id: profile.id,
       name: profile.name,
       profileImage: profile.profile_image,
       marriageStatus: profile.marriage_status,

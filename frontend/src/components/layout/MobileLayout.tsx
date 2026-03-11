@@ -21,6 +21,8 @@ interface MobileLayoutProps {
   showNav?: boolean;
   /** TabBar 표시 여부 */
   showTabBar?: boolean;
+  /** 본문 영역 추가 클래스 */
+  mainClassName?: string;
   children: ReactNode;
 }
 
@@ -33,6 +35,7 @@ export default function MobileLayout({
   onTabChange,
   showNav = true,
   showTabBar = true,
+  mainClassName = "",
   children,
 }: MobileLayoutProps) {
   const [internalTab, setInternalTab] = useState(tabs[0]?.key ?? "");
@@ -53,9 +56,9 @@ export default function MobileLayout({
 
       {/* 스크롤 가능한 본문 영역 */}
       <main
-        className={`flex-1 overflow-y-auto ${showNav ? "pt-[92px]" : ""} ${
+        className={`flex-1 overflow-y-auto ${showNav ? "pt-12" : ""} ${
           showTabBar ? "pb-[83px]" : ""
-        }`}
+        } ${mainClassName}`}
       >
         {children}
       </main>

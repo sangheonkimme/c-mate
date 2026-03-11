@@ -29,7 +29,7 @@ const BasicInfoEditLayout = ({
       showNav={true}
       showTabBar={true}
     >
-      <div className="flex min-h-[calc(100dvh-175px)] flex-col bg-white p-4">
+      <div className="flex min-h-[calc(100dvh-131px)] flex-col bg-white p-4">
         <div>
           <h2 className="text-H1 text-gray-black">{heading}</h2>
           {description && <div className="mt-4 text-b1 text-gray-2">{description}</div>}

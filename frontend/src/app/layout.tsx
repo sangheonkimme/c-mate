@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import AppProviders from "@/lib/providers/AppProviders";
 
 export const metadata: Metadata = {
   title: "C-Mate",
@@ -20,7 +21,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-gray-2 font-sans text-base antialiased">
-        {children}
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   );

@@ -1,23 +1,39 @@
 "use client";
 
-interface ToastProps {
-  message: string;
-  visible: boolean;
-}
+import { Toaster } from "react-hot-toast";
 
-export default function Toast({ message, visible }: ToastProps) {
+export default function Toast() {
   return (
-    <div
-      aria-live="polite"
-      aria-hidden={!visible}
-      className={`pointer-events-none fixed bottom-[99px] left-1/2 z-50 w-[calc(100%-32px)] max-w-[343px] -translate-x-1/2 rounded-[12px] bg-gray-black/90 px-4 py-3 text-center text-b2 text-white shadow-[0_8px_24px_rgba(17,17,17,0.18)] transition-all duration-200 ${
-        visible
-          ? "translate-y-0 opacity-100"
-          : "translate-y-3 opacity-0"
-      }`}
-      role="status"
-    >
-      {message}
-    </div>
+    <Toaster
+      position="bottom-center"
+      reverseOrder={false}
+      gutter={0}
+      containerStyle={{
+        bottom: 99,
+        left: "50%",
+        right: "auto",
+        transform: "translateX(-50%)",
+        width: "min(100vw, 375px)",
+      }}
+      toastOptions={{
+        duration: 2000,
+        style: {
+          width: "calc(100% - 32px)",
+          maxWidth: "343px",
+          margin: "0 auto",
+          borderRadius: "12px",
+          background: "rgba(53, 54, 68, 0.9)",
+          color: "#FFFFFF",
+          padding: "12px 16px",
+          boxShadow: "0 8px 24px rgba(17, 17, 17, 0.18)",
+          fontSize: "14px",
+          lineHeight: "18px",
+          fontWeight: 400,
+          letterSpacing: "-0.2px",
+          textAlign: "center",
+          pointerEvents: "none",
+        },
+      }}
+    />
   );
 }

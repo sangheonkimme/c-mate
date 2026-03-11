@@ -1,4 +1,5 @@
 -- C-Mate Database Initialization Script
+SET NAMES utf8mb4;
 
 CREATE DATABASE IF NOT EXISTS c_mate
   DEFAULT CHARACTER SET utf8mb4

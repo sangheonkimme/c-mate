@@ -4,14 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import IcoCancelCircle from "@/assets/icons/ico-cancel-circle.svg";
+import { BasicInfoEditLayout } from "@/components/profile-edit";
 import { Button, TextField } from "@/components";
-import { BasicInfoEditLayout } from "@/app/profile/edit/_components";
 import { useProfileEditStore } from "@/stores/profileEditStore";
 
 const HeightEditPage = () => {
   const router = useRouter();
-  const savedHeight = useProfileEditStore((state) => state.height);
-  const setHeight = useProfileEditStore((state) => state.setHeight);
+  const savedHeight = useProfileEditStore((state) => state.profile.height);
+  const { setProfile } = useProfileEditStore((state) => state.actions);
   const [height, setHeightDraft] = useState(savedHeight);
   const [isFocused, setIsFocused] = useState(false);
 
@@ -21,7 +21,10 @@ const HeightEditPage = () => {
 
   const trimmedHeight = height.trim();
   const isChanged = trimmedHeight.length > 0 && trimmedHeight !== savedHeight;
-  const heightTextColor = !isFocused && trimmedHeight === savedHeight ? "text-gray-3" : "text-gray-black";
+  const heightTextColor =
+    !isFocused && trimmedHeight === savedHeight
+      ? "text-gray-3"
+      : "text-gray-black";
 
   const inputClassName = useMemo(
     () =>
@@ -34,11 +37,8 @@ const HeightEditPage = () => {
   );
 
   const handleComplete = () => {
-    if (!isChanged) {
-      return;
-    }
-
-    setHeight(trimmedHeight);
+    if (!isChanged) return;
+    setProfile({ height: trimmedHeight });
     router.push("/profile/edit");
   };
 
@@ -47,7 +47,12 @@ const HeightEditPage = () => {
       heading="키(신장)을 입력해주세요"
       onBack={() => router.push("/profile/edit")}
       footer={
-        <Button size="m" className="w-full" disabled={!isChanged} onClick={handleComplete}>
+        <Button
+          size="m"
+          className="w-full"
+          disabled={!isChanged}
+          onClick={handleComplete}
+        >
           완료
         </Button>
       }

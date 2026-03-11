@@ -24,6 +24,18 @@
   --color-gray-6: #F8F8FC;
 }
 
+@layer base {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+}
+
 @layer utilities {
   /* Typography Variables: Dp, H1, H2, B1, B2, b1, b2, b3 */
   .text-Dp { font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.4px; }

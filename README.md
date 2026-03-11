@@ -30,14 +30,39 @@ http://localhost:3000
 - 초기 메인/서브/포토북 이미지는 `backend/src/uploads/1` 아래 시드 이미지로 제공됩니다.
 - 프론트는 `next.config.mjs`를 통해 `/api/*`, `/uploads/*` 요청을 백엔드 컨테이너로 프록시합니다.
 
+## 디자인 시스템
+
+이 프로젝트는 피그마 기준 디자인 시스템을 Tailwind 토큰과 공용 컴포넌트로 적용했습니다.
+
+- 토큰 정의: `frontend/src/app/globals.css`
+- 공용 컴포넌트: `frontend/src/components/ui`
+
+적용 범위:
+
+- Typography: `Dp`, `H1`, `H2`, `B1`, `B2`, `b1`, `b2`, `b3`
+- Color: `primary`, `sub-green`, `sub-red`, `sub-orange`, `gray-black`, `gray-1` ~ `gray-6`
+- UI: 버튼, 입력창, 텍스트 영역, 라디오, 체크박스, 라벨, 셀렉트, 하단 탭바, 상단 네비, 섹션 타이틀
+
+구현 원칙:
+
+- 화면에서 직접 스타일을 반복 정의하지 않고 공용 컴포넌트와 토큰을 우선 사용합니다.
+- 프로필 수정처럼 도메인 성격이 강한 UI는 `components/profile-edit` 아래에 별도 컴포넌트로 관리합니다.
+
 ## 프로젝트 구조
 
 ```
 c-mate/
 ├── docker-compose.yml
 ├── frontend/                # Next.js
-│   ├── src/app/             # 페이지
-│   ├── src/components/      # 컴포넌트
+│   ├── src/
+│   │   ├── app/             # 페이지, 레이아웃, 글로벌 스타일
+│   │   ├── assets/          # 아이콘, 이미지 에셋
+│   │   ├── components/      # 공용/도메인 UI 컴포넌트
+│   │   ├── features/        # 화면 도메인별 상수, 데이터, 유틸
+│   │   ├── hooks/           # React Query 등 커스텀 훅
+│   │   ├── lib/             # API 클라이언트, Provider
+│   │   ├── stores/          # zustand 상태 저장소
+│   │   └── types/           # 공용 타입 정의
 │   └── next.config.mjs      # API 프록시 설정
 ├── backend/                 # Express
 │   └── src/
@@ -80,26 +105,26 @@ erDiagram
 
 ### `profile`
 
-| 컬럼 | 타입 | 설명 |
-| --- | --- | --- |
-| `id` | `INT` | 프로필 PK |
-| `name` | `VARCHAR(50)` | 이름 |
-| `profile_image` | `VARCHAR(255)` | 메인 프로필 이미지 URL |
-| `marriage_status` | `ENUM('초혼', '재혼', '사실혼')` | 결혼 여부 |
-| `height` | `INT` | 신장(cm) |
-| `created_at` | `TIMESTAMP` | 생성 시각 |
-| `updated_at` | `TIMESTAMP` | 수정 시각 |
+| 컬럼              | 타입                             | 설명                   |
+| ----------------- | -------------------------------- | ---------------------- |
+| `id`              | `INT`                            | 프로필 PK              |
+| `name`            | `VARCHAR(50)`                    | 이름                   |
+| `profile_image`   | `VARCHAR(255)`                   | 메인 프로필 이미지 URL |
+| `marriage_status` | `ENUM('초혼', '재혼', '사실혼')` | 결혼 여부              |
+| `height`          | `INT`                            | 신장(cm)               |
+| `created_at`      | `TIMESTAMP`                      | 생성 시각              |
+| `updated_at`      | `TIMESTAMP`                      | 수정 시각              |
 
 ### `photos`
 
-| 컬럼 | 타입 | 설명 |
-| --- | --- | --- |
-| `id` | `VARCHAR(36)` | 사진 PK(UUID) |
-| `profile_id` | `INT` | `profile.id` FK |
-| `type` | `ENUM('sub', 'photobook')` | 서브 프로필 / 포토북 구분 |
-| `slot_number` | `INT` | 슬롯 번호 |
-| `url` | `VARCHAR(255)` | 업로드 이미지 URL |
-| `created_at` | `TIMESTAMP` | 생성 시각 |
+| 컬럼          | 타입                       | 설명                      |
+| ------------- | -------------------------- | ------------------------- |
+| `id`          | `VARCHAR(36)`              | 사진 PK(UUID)             |
+| `profile_id`  | `INT`                      | `profile.id` FK           |
+| `type`        | `ENUM('sub', 'photobook')` | 서브 프로필 / 포토북 구분 |
+| `slot_number` | `INT`                      | 슬롯 번호                 |
+| `url`         | `VARCHAR(255)`             | 업로드 이미지 URL         |
+| `created_at`  | `TIMESTAMP`                | 생성 시각                 |
 
 ### 제약 조건
 

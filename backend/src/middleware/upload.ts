@@ -1,12 +1,13 @@
 import multer from 'multer';
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 import { v4 as uuidv4 } from 'uuid';
+import { UPLOADS_DIR } from '../utils/uploads';
 
 const storage = multer.diskStorage({
   destination: (req, _file, cb) => {
     const userId = (req.params.userId as string) || 'unknown';
-    const uploadDir = path.join(__dirname, '..', 'uploads', userId);
+    const uploadDir = path.join(UPLOADS_DIR, userId);
 
     // 유저별 폴더가 없으면 생성
     if (!fs.existsSync(uploadDir)) {

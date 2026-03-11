@@ -28,6 +28,12 @@ yarn-error.log*
 # Uploaded images (keep the directory, ignore contents)
 backend/src/uploads/*
 !backend/src/uploads/.gitkeep
+!backend/src/uploads/1/
+backend/src/uploads/1/*
+!backend/src/uploads/1/seed-profile-main.jpg
+!backend/src/uploads/1/seed-sub-01.jpg
+!backend/src/uploads/1/seed-sub-02.jpg
+!backend/src/uploads/1/seed-photobook-01.jpg
 
 # Docs
 _docs/

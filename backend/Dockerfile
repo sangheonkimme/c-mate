@@ -21,7 +21,7 @@ RUN npm ci --omit=dev
 COPY --from=builder /app/dist ./dist
 
 # 업로드 폴더 생성
-RUN mkdir -p src/uploads
+RUN mkdir -p uploads
 
 EXPOSE 4000
 

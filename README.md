@@ -34,7 +34,7 @@ c-mate/
 ├── frontend/                # Next.js
 │   ├── src/app/             # 페이지
 │   ├── src/components/      # 컴포넌트
-│   └── next.config.ts       # API 프록시 설정
+│   └── next.config.mjs      # API 프록시 설정
 ├── backend/                 # Express
 │   └── src/
 │       ├── controllers/     # 비즈니스 로직

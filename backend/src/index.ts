@@ -1,9 +1,10 @@
 import express from 'express';
 import cors from 'cors';
-import path from 'path';
 import dotenv from 'dotenv';
 import profileRoutes from './routes/profile';
 import { testConnection } from './db/connection';
+import { runMigrations } from './db/migrate';
+import { ensureUploadsDir, UPLOADS_DIR } from './utils/uploads';
 
 dotenv.config();
 
@@ -19,7 +20,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // 정적 파일 서빙 (업로드된 이미지)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+ensureUploadsDir();
+app.use('/uploads', express.static(UPLOADS_DIR));
 
 // API 라우트
 app.use('/api/profile', profileRoutes);
@@ -33,6 +35,7 @@ app.get('/api/health', (_req, res) => {
 const startServer = async () => {
   try {
     await testConnection();
+    await runMigrations();
     app.listen(PORT, () => {
       console.log(`🚀 서버가 http://localhost:${PORT} 에서 실행 중입니다.`);
     });

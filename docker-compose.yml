@@ -11,7 +11,17 @@ services:
       - db_data:/var/lib/mysql
       - ./backend/src/db/init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pcmate1234"]
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-pcmate1234",
+        ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -33,7 +43,7 @@ services:
       DB_PASSWORD: cmate1234
       DB_NAME: c_mate
     volumes:
-      - ./backend/src/uploads:/app/src/uploads
+      - ./backend/src/uploads:/app/uploads
     depends_on:
       db:
         condition: service_healthy
@@ -45,6 +55,8 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: http://backend:4000
     container_name: c-mate-frontend
     restart: unless-stopped
     environment:

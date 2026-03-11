@@ -1,23 +1,23 @@
 "use client";
 
-import Image, { type StaticImageData } from "next/image";
-import type { CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import profileMainImage from "@/assets/imgs/profile-main.jpg";
-import profilePhotobook01Image from "@/assets/imgs/profile-photobook-01.jpg";
-import profileSub01Image from "@/assets/imgs/profile-sub-01.jpg";
-import profileSub02Image from "@/assets/imgs/profile-sub-02.jpg";
 import IcoImgEdit from "@/assets/icons/ico-img-edit.svg";
 import IcoPlus from "@/assets/icons/ico-plus.svg";
 import IcoVolume from "@/assets/icons/ico-volume.svg";
-import { getBasicInfoItems } from "@/app/profile/edit/constants";
+import {
+  getBasicInfoItems,
+  MAX_PHOTOBOOK_COUNT,
+  PROFILE_USER_ID,
+} from "@/app/profile/edit/constants";
 import { useProfileEditStore } from "@/stores/profileEditStore";
 import {
   Button,
   InfoRow,
   Label,
   MobileLayout,
+  PhotoInputCard,
   Section,
   SectionTitle,
   TagPanel,
@@ -50,65 +50,147 @@ const LIFESTYLE_TAGS = [
   "🏋️ 헬스",
   "🎶 찬양/CCM",
 ];
-
-const PLUS_TILE_CLASS = "flex items-center justify-center bg-gray-4 text-white";
-const SUB_PROFILE_SLOT_COUNT = 4;
-
-const SUB_PROFILE_IMAGES = [
-  { src: profileSub01Image, alt: "서브 프로필 사진 1" },
-  { src: profileSub02Image, alt: "서브 프로필 사진 2" },
-];
-
-function PhotoCard({
-  src,
-  alt,
-  className = "",
-  imageClassName = "",
-  overlayClassName,
-  overlayStyle,
-  sizes,
-  priority = false,
-}: {
-  src: StaticImageData;
-  alt: string;
-  className?: string;
-  imageClassName?: string;
-  overlayClassName?: string;
-  overlayStyle?: CSSProperties;
-  sizes: string;
-  priority?: boolean;
-}) {
-  return (
-    <div className={`relative overflow-hidden ${className}`}>
-      <Image
-        src={src}
-        alt={alt}
-        fill
-        sizes={sizes}
-        className={`object-cover ${imageClassName}`}
-        priority={priority}
-      />
-      <div
-        className={`absolute ${
-          overlayClassName ??
-          "inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(180deg,rgba(53,54,68,0)_0%,rgba(53,54,68,0.14)_100%)]"
-        }`}
-        style={overlayStyle}
-      />
-    </div>
-  );
-}
+const PHOTOBOOK_VISIBLE_SLOT_COUNT = 3;
 
 export default function ProfileEditPage() {
   const router = useRouter();
+  const hasLoadedProfile = useProfileEditStore((state) => state.hasLoadedProfile);
   const profileName = useProfileEditStore((state) => state.profileName);
   const marriageStatus = useProfileEditStore((state) => state.marriageStatus);
   const height = useProfileEditStore((state) => state.height);
+  const mainProfilePhoto = useProfileEditStore((state) => state.mainProfilePhoto);
+  const subProfilePhotos = useProfileEditStore((state) => state.subProfilePhotos);
+  const photobookPhotos = useProfileEditStore((state) => state.photobookPhotos);
+  const hydrateProfile = useProfileEditStore((state) => state.hydrateProfile);
+  const setMainProfilePhoto = useProfileEditStore(
+    (state) => state.setMainProfilePhoto,
+  );
+  const setSubProfilePhoto = useProfileEditStore(
+    (state) => state.setSubProfilePhoto,
+  );
+  const replacePhotobookPhoto = useProfileEditStore(
+    (state) => state.replacePhotobookPhoto,
+  );
+  const addPhotobookPhotos = useProfileEditStore(
+    (state) => state.addPhotobookPhotos,
+  );
+  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [saveErrorMessage, setSaveErrorMessage] = useState("");
+
+  useEffect(() => {
+    if (hasLoadedProfile) {
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadProfile = async () => {
+      setIsLoadingProfile(true);
+
+      try {
+        const response = await fetch(`/api/profile/${PROFILE_USER_ID}`, {
+          cache: "no-store",
+        });
+
+        if (!response.ok) {
+          throw new Error("프로필 정보를 불러오지 못했습니다.");
+        }
+
+        const profile = await response.json();
+
+        if (!isMounted) {
+          return;
+        }
+
+        console.log("[ProfileEditPage] fetched profile:", profile);
+        hydrateProfile(profile);
+        setSaveErrorMessage("");
+      } catch (error) {
+        console.error("프로필 조회 실패:", error);
+
+        if (isMounted) {
+          setSaveErrorMessage(
+            "프로필 정보를 불러오지 못했습니다. 저장 후 다시 확인해주세요.",
+          );
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingProfile(false);
+        }
+      }
+    };
+
+    void loadProfile();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [hasLoadedProfile, hydrateProfile]);
+
   const basicInfoItems = getBasicInfoItems({
     profileName,
     marriageStatus,
     height,
   });
+
+  const photobookAddTileCount =
+    photobookPhotos.length < MAX_PHOTOBOOK_COUNT
+      ? Math.max(PHOTOBOOK_VISIBLE_SLOT_COUNT - photobookPhotos.length, 1)
+      : 0;
+
+  const handleSaveProfile = async () => {
+    setIsSavingProfile(true);
+    setSaveErrorMessage("");
+
+    try {
+      const formData = new FormData();
+
+      formData.set("name", profileName);
+      formData.set("marriageStatus", marriageStatus);
+      formData.set("height", height);
+
+      if (mainProfilePhoto.file) {
+        formData.append("profileImage", mainProfilePhoto.file);
+      }
+
+      subProfilePhotos.forEach((photo) => {
+        if (photo.file) {
+          formData.append(`sub_${photo.slotNumber}`, photo.file);
+        }
+      });
+
+      photobookPhotos.forEach((photo) => {
+        if (photo.file) {
+          formData.append(`photobook_${photo.slotNumber}`, photo.file);
+        }
+      });
+
+      const response = await fetch(`/api/profile/${PROFILE_USER_ID}/save`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorPayload = (await response
+          .json()
+          .catch(() => null)) as { message?: string } | null;
+
+        throw new Error(errorPayload?.message ?? "프로필 저장에 실패했습니다.");
+      }
+
+      const profile = await response.json();
+      hydrateProfile(profile);
+      router.push("/?saved=1");
+    } catch (error) {
+      console.error("프로필 저장 실패:", error);
+      setSaveErrorMessage(
+        error instanceof Error ? error.message : "프로필 저장에 실패했습니다.",
+      );
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
 
   return (
     <MobileLayout
@@ -120,57 +202,58 @@ export default function ProfileEditPage() {
     >
       <div className="flex flex-col gap-4 bg-gray-6 py-4">
         <Section>
-          <div className="relative">
-            <PhotoCard
-              src={profileMainImage}
-              alt="메인 프로필 사진"
-              className="h-[300px] w-full"
-              imageClassName="object-[center_0%]"
-              overlayClassName="inset-x-0 bottom-0 h-[80px] opacity-80"
-              overlayStyle={{
-                background:
-                  "linear-gradient(180deg, rgba(0, 0, 0, 0) 1.82%, #111111 99.43%)",
-              }}
-              sizes="(max-width: 375px) 100vw, 343px"
-              priority
-            />
+          <PhotoInputCard
+            src={mainProfilePhoto.src}
+            alt={mainProfilePhoto.alt}
+            className="h-[300px] w-full"
+            imageClassName="object-[center_0%]"
+            overlayClassName="inset-x-0 bottom-0 h-[80px] opacity-80"
+            overlayStyle={{
+              background:
+                "linear-gradient(180deg, rgba(0, 0, 0, 0) 1.82%, #111111 99.43%)",
+            }}
+            sizes="(max-width: 375px) 100vw, 343px"
+            priority
+            placeholder={<IcoPlus className="h-10 w-10" />}
+            onSelectFiles={(files) => {
+              const [file] = files;
+
+              if (file) {
+                setMainProfilePhoto(file);
+              }
+            }}
+          >
             <Label
               variant="primary"
               className="absolute left-3 top-4 rounded-[20px] px-2 py-[3px]"
             >
               메인 프로필
             </Label>
-            <button
-              type="button"
-              className="absolute bottom-4 right-4 flex items-center justify-center bg-transparent p-0"
-              aria-label="메인 프로필 수정"
-            >
-              <IcoImgEdit className="h-9 w-9" />
-            </button>
-          </div>
+
+            {mainProfilePhoto.src && (
+              <span className="pointer-events-none absolute bottom-4 right-4">
+                <IcoImgEdit className="h-9 w-9" />
+              </span>
+            )}
+          </PhotoInputCard>
 
           <div className="mt-4 flex items-center justify-between">
-            {SUB_PROFILE_IMAGES.map((image) => (
-              <PhotoCard
-                key={image.alt}
-                src={image.src}
-                alt={image.alt}
+            {subProfilePhotos.map((photo) => (
+              <PhotoInputCard
+                key={photo.slotNumber}
+                src={photo.src}
+                alt={photo.alt}
                 className="h-[85px] w-[81px] rounded-[8px]"
                 sizes="81px"
+                placeholder={<IcoPlus className="h-6 w-6" />}
+                onSelectFiles={(files) => {
+                  const [file] = files;
+
+                  if (file) {
+                    setSubProfilePhoto(photo.slotNumber, file);
+                  }
+                }}
               />
-            ))}
-            {Array.from({
-              length: Math.max(
-                SUB_PROFILE_SLOT_COUNT - SUB_PROFILE_IMAGES.length,
-                0,
-              ),
-            }).map((_, index) => (
-              <div
-                key={`sub-profile-empty-${index}`}
-                className={`${PLUS_TILE_CLASS} h-[85px] w-[81px] rounded-[8px]`}
-              >
-                <IcoPlus className="h-6 w-6" />
-              </div>
             ))}
           </div>
         </Section>
@@ -178,13 +261,17 @@ export default function ProfileEditPage() {
         <Section>
           <SectionTitle title="기본정보" />
           <div className="mt-4">
-            {basicInfoItems.map((item) => (
-              <InfoRow
-                key={item.label}
-                {...item}
-                onClick={item.href ? () => router.push(item.href) : undefined}
-              />
-            ))}
+            {basicInfoItems.map((item) => {
+              const href = item.href;
+
+              return (
+                <InfoRow
+                  key={item.label}
+                  {...item}
+                  onClick={href ? () => router.push(href) : undefined}
+                />
+              );
+            })}
           </div>
 
           <Button
@@ -199,23 +286,36 @@ export default function ProfileEditPage() {
 
         <Section>
           <SectionTitle title="포토북 등록하기" showArrow />
-          <div className="mt-4 flex gap-2">
-            <PhotoCard
-              src={profilePhotobook01Image}
-              alt="포토북 사진 1"
-              className="h-[120px] w-[109px] rounded-[8px]"
-              sizes="109px"
-            />
-            <div
-              className={`${PLUS_TILE_CLASS} h-[120px] w-[109px] rounded-[8px]`}
-            >
-              <IcoPlus className="h-6 w-6" />
-            </div>
-            <div
-              className={`${PLUS_TILE_CLASS} h-[120px] w-[109px] rounded-[8px]`}
-            >
-              <IcoPlus className="h-6 w-6" />
-            </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {photobookPhotos.map((photo) => (
+              <PhotoInputCard
+                key={photo.id}
+                src={photo.src}
+                alt={photo.alt}
+                className="h-[120px] w-[109px] rounded-[8px]"
+                sizes="109px"
+                placeholder={<IcoPlus className="h-6 w-6" />}
+                onSelectFiles={(files) => {
+                  const [file] = files;
+
+                  if (file) {
+                    replacePhotobookPhoto(photo.id, file);
+                  }
+                }}
+              />
+            ))}
+
+            {Array.from({ length: photobookAddTileCount }).map((_, index) => (
+              <PhotoInputCard
+                key={`photobook-add-${photobookPhotos.length}-${index}`}
+                alt="포토북 사진 추가"
+                className="h-[120px] w-[109px] rounded-[8px]"
+                sizes="109px"
+                multiple
+                placeholder={<IcoPlus className="h-6 w-6" />}
+                onSelectFiles={addPhotobookPhotos}
+              />
+            ))}
           </div>
         </Section>
 
@@ -245,11 +345,21 @@ export default function ProfileEditPage() {
           <SectionTitle title="라이프 스타일" showArrow />
           <TagPanel tags={LIFESTYLE_TAGS} minHeight="min-h-[184px]" />
 
-          <Button size="m" className="mt-4 w-full">
-            프로필 저장하기
+          {saveErrorMessage && (
+            <p className="mt-4 text-b3 text-sub-red">{saveErrorMessage}</p>
+          )}
+
+          <Button
+            size="m"
+            className="mt-4 w-full"
+            onClick={handleSaveProfile}
+            disabled={isSavingProfile || isLoadingProfile}
+          >
+            {isSavingProfile ? "저장 중..." : "프로필 저장하기"}
           </Button>
         </Section>
       </div>
+
     </MobileLayout>
   );
 }

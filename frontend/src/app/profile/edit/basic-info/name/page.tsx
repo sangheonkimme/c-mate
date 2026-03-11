@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import IcoCancelCircle from "@/assets/icons/ico-cancel-circle.svg";
-import { BasicInfoEditLayout, Button, TextField } from "@/components";
+import { Button, TextField } from "@/components";
+import { BasicInfoEditLayout } from "@/app/profile/edit/_components";
 import { useProfileEditStore } from "@/stores/profileEditStore";
 
 const NameEditPage = () => {

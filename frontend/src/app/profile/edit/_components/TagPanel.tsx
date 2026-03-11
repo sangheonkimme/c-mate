@@ -1,4 +1,4 @@
-import Label from "@/components/Label";
+import { Label } from "@/components";
 
 interface TagPanelProps {
   tags: string[];

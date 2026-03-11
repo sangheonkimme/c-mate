@@ -94,9 +94,11 @@ const createPhotobookPhotos = (
   photos: ProfilePhotoResponse[] = [],
 ): EditablePhoto[] => {
   return photos
-    .filter((photo): photo is ProfilePhotoResponse & { slot_number: number } => {
-      return typeof photo.slot_number === "number";
-    })
+    .filter(
+      (photo): photo is ProfilePhotoResponse & { slot_number: number } => {
+        return typeof photo.slot_number === "number";
+      },
+    )
     .sort((left, right) => left.slot_number - right.slot_number)
     .slice(0, MAX_PHOTOBOOK_COUNT)
     .map((photo, index) => ({
@@ -110,17 +112,28 @@ const createPhotobookPhotos = (
 
 const createObjectUrl = (file: File) => URL.createObjectURL(file);
 
-const revokePhotoPreview = (photo: { src: EditablePhotoSource; file: File | null }) => {
-  if (photo.file && typeof photo.src === "string" && photo.src.startsWith("blob:")) {
+const revokePhotoPreview = (photo: {
+  src: EditablePhotoSource;
+  file: File | null;
+}) => {
+  if (
+    photo.file &&
+    typeof photo.src === "string" &&
+    photo.src.startsWith("blob:")
+  ) {
     URL.revokeObjectURL(photo.src);
   }
 };
 
-const revokePhotoCollection = (photos: Array<{ src: EditablePhotoSource; file: File | null }>) => {
+const revokePhotoCollection = (
+  photos: Array<{ src: EditablePhotoSource; file: File | null }>,
+) => {
   photos.forEach(revokePhotoPreview);
 };
 
-const replacePhotoWithFile = <T extends { src: EditablePhotoSource; file: File | null }>(
+const replacePhotoWithFile = <
+  T extends { src: EditablePhotoSource; file: File | null },
+>(
   photo: T,
   file: File,
 ): T => {
@@ -205,7 +218,9 @@ export const useProfileEditStore = create<ProfileEditState>((set) => ({
   setSubProfilePhoto: (slotNumber, file) =>
     set((state) => ({
       subProfilePhotos: state.subProfilePhotos.map((photo) =>
-        photo.slotNumber === slotNumber ? replacePhotoWithFile(photo, file) : photo,
+        photo.slotNumber === slotNumber
+          ? replacePhotoWithFile(photo, file)
+          : photo,
       ),
     })),
   replacePhotobookPhoto: (photoId, file) =>

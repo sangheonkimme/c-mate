@@ -14,15 +14,17 @@ import {
 import { useProfileEditStore } from "@/stores/profileEditStore";
 import {
   Button,
-  InfoRow,
   Label,
   MobileLayout,
-  PhotoInputCard,
   Section,
   SectionTitle,
-  TagPanel,
   TextArea,
 } from "@/components";
+import {
+  InfoRow,
+  PhotoInputCard,
+  TagPanel,
+} from "@/app/profile/edit/_components";
 
 const CHARM_TAGS = [
   "선함",
@@ -54,12 +56,18 @@ const PHOTOBOOK_VISIBLE_SLOT_COUNT = 3;
 
 export default function ProfileEditPage() {
   const router = useRouter();
-  const hasLoadedProfile = useProfileEditStore((state) => state.hasLoadedProfile);
+  const hasLoadedProfile = useProfileEditStore(
+    (state) => state.hasLoadedProfile,
+  );
   const profileName = useProfileEditStore((state) => state.profileName);
   const marriageStatus = useProfileEditStore((state) => state.marriageStatus);
   const height = useProfileEditStore((state) => state.height);
-  const mainProfilePhoto = useProfileEditStore((state) => state.mainProfilePhoto);
-  const subProfilePhotos = useProfileEditStore((state) => state.subProfilePhotos);
+  const mainProfilePhoto = useProfileEditStore(
+    (state) => state.mainProfilePhoto,
+  );
+  const subProfilePhotos = useProfileEditStore(
+    (state) => state.subProfilePhotos,
+  );
   const photobookPhotos = useProfileEditStore((state) => state.photobookPhotos);
   const hydrateProfile = useProfileEditStore((state) => state.hydrateProfile);
   const setMainProfilePhoto = useProfileEditStore(
@@ -77,6 +85,70 @@ export default function ProfileEditPage() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(false);
   const [isSavingProfile, setIsSavingProfile] = useState(false);
   const [saveErrorMessage, setSaveErrorMessage] = useState("");
+
+  const basicInfoItems = getBasicInfoItems({
+    profileName,
+    marriageStatus,
+    height,
+  });
+
+  const photobookAddTileCount =
+    photobookPhotos.length < MAX_PHOTOBOOK_COUNT
+      ? Math.max(PHOTOBOOK_VISIBLE_SLOT_COUNT - photobookPhotos.length, 1)
+      : 0;
+
+  const handleSaveProfile = async () => {
+    setIsSavingProfile(true);
+    setSaveErrorMessage("");
+
+    try {
+      const formData = new FormData();
+
+      formData.set("name", profileName);
+      formData.set("marriageStatus", marriageStatus);
+      formData.set("height", height);
+
+      if (mainProfilePhoto.file) {
+        formData.append("profileImage", mainProfilePhoto.file);
+      }
+
+      subProfilePhotos.forEach((photo) => {
+        if (photo.file) {
+          formData.append(`sub_${photo.slotNumber}`, photo.file);
+        }
+      });
+
+      photobookPhotos.forEach((photo) => {
+        if (photo.file) {
+          formData.append(`photobook_${photo.slotNumber}`, photo.file);
+        }
+      });
+
+      const response = await fetch(`/api/profile/${PROFILE_USER_ID}/save`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorPayload = (await response.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+
+        throw new Error(errorPayload?.message ?? "프로필 저장에 실패했습니다.");
+      }
+
+      const profile = await response.json();
+      hydrateProfile(profile);
+      router.push("/?saved=1");
+    } catch (error) {
+      console.error("프로필 저장 실패:", error);
+      setSaveErrorMessage(
+        error instanceof Error ? error.message : "프로필 저장에 실패했습니다.",
+      );
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
 
   useEffect(() => {
     if (hasLoadedProfile) {
@@ -127,70 +199,6 @@ export default function ProfileEditPage() {
       isMounted = false;
     };
   }, [hasLoadedProfile, hydrateProfile]);
-
-  const basicInfoItems = getBasicInfoItems({
-    profileName,
-    marriageStatus,
-    height,
-  });
-
-  const photobookAddTileCount =
-    photobookPhotos.length < MAX_PHOTOBOOK_COUNT
-      ? Math.max(PHOTOBOOK_VISIBLE_SLOT_COUNT - photobookPhotos.length, 1)
-      : 0;
-
-  const handleSaveProfile = async () => {
-    setIsSavingProfile(true);
-    setSaveErrorMessage("");
-
-    try {
-      const formData = new FormData();
-
-      formData.set("name", profileName);
-      formData.set("marriageStatus", marriageStatus);
-      formData.set("height", height);
-
-      if (mainProfilePhoto.file) {
-        formData.append("profileImage", mainProfilePhoto.file);
-      }
-
-      subProfilePhotos.forEach((photo) => {
-        if (photo.file) {
-          formData.append(`sub_${photo.slotNumber}`, photo.file);
-        }
-      });
-
-      photobookPhotos.forEach((photo) => {
-        if (photo.file) {
-          formData.append(`photobook_${photo.slotNumber}`, photo.file);
-        }
-      });
-
-      const response = await fetch(`/api/profile/${PROFILE_USER_ID}/save`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorPayload = (await response
-          .json()
-          .catch(() => null)) as { message?: string } | null;
-
-        throw new Error(errorPayload?.message ?? "프로필 저장에 실패했습니다.");
-      }
-
-      const profile = await response.json();
-      hydrateProfile(profile);
-      router.push("/?saved=1");
-    } catch (error) {
-      console.error("프로필 저장 실패:", error);
-      setSaveErrorMessage(
-        error instanceof Error ? error.message : "프로필 저장에 실패했습니다.",
-      );
-    } finally {
-      setIsSavingProfile(false);
-    }
-  };
 
   return (
     <MobileLayout
@@ -359,7 +367,6 @@ export default function ProfileEditPage() {
           </Button>
         </Section>
       </div>
-
     </MobileLayout>
   );
 }

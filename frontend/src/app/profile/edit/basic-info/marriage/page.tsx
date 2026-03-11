@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { BasicInfoEditLayout, Button, RadioButton } from "@/components";
+import { Button, RadioButton } from "@/components";
+import { BasicInfoEditLayout } from "@/app/profile/edit/_components";
 import { MARRIAGE_OPTIONS } from "@/app/profile/edit/constants";
 import { useProfileEditStore } from "@/stores/profileEditStore";
 

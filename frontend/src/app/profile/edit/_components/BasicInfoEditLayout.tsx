@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 
-import MobileLayout from "@/components/MobileLayout";
+import { MobileLayout } from "@/components";
 
 interface BasicInfoEditLayoutProps {
   heading: string;

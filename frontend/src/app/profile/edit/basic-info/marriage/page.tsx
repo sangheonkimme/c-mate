@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { BasicInfoEditLayout, Button, RadioButton } from "@/components";
@@ -9,10 +9,17 @@ import { useProfileEditStore } from "@/stores/profileEditStore";
 
 const MarriageEditPage = () => {
   const router = useRouter();
+  const savedMarriageStatus = useProfileEditStore(
+    (state) => state.marriageStatus,
+  );
   const setMarriageStatus = useProfileEditStore(
     (state) => state.setMarriageStatus,
   );
-  const [selectedMarriage, setSelectedMarriage] = useState("");
+  const [selectedMarriage, setSelectedMarriage] = useState(savedMarriageStatus);
+
+  useEffect(() => {
+    setSelectedMarriage(savedMarriageStatus);
+  }, [savedMarriageStatus]);
 
   const handleComplete = () => {
     if (!selectedMarriage) {
@@ -28,7 +35,7 @@ const MarriageEditPage = () => {
       heading="결혼여부를 선택해주세요"
       notice={
         <div className="space-y-1 text-b2 text-sub-red">
-          <p># 미혼인 경우 초혼을 선택해주세요.</p>
+          <p>미혼인 경우 초혼을 선택해주세요.</p>
           <p>허위 기재시 민/형사상의 책임을 물으시게 됩니다.</p>
         </div>
       }
